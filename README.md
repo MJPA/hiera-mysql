@@ -54,6 +54,17 @@ Here is a sample hiera.yaml file that will work with mysql
       - SELECT val FROM configdata WHERE var='%{key}' AND environment='common'
 </pre>
 
+:query: can also be a hash - when it's a hash, the lookup key must be of the format `queryname:key`. The `queryname` should match the key of the hash. With the below configuration, a user's email can be found with a query for `useremail:root` and only the `useremail` query will be executed.
+
+<pre>
+    :query:
+      :useremail: SELECT email FROM users WHERE name = '%{key}'
+      :content: SELECT * FROM content WHERE author = '%{key}'
+</pre>
+
+
+
+
 Results and data types
 ======================
 
