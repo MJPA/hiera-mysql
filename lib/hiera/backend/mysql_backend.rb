@@ -23,11 +23,28 @@ class Hiera
                 answer = nil
 
                 # Parse the mysql query from the config, we also pass in key
-                # to extra_data so this can be interpreted into the query 
+                # to extra_data so this can be interpreted into the query
                 # string
                 #
-                queries = [ Config[:mysql][:query] ].flatten
-                queries.map! { |q| Backend.parse_string(q, scope, {"key" => key}) }
+                queries_config = Config[:mysql][:query]
+                if queries_config.is_a? Hash
+                  queries = []
+                  lookup_pair = key.split(':', 2)
+                  if lookup_pair.length != 2
+                    lookup_pair = [ '', lookup_pair[0].to_s ]
+                  else
+                    lookup_pair[0] = lookup_pair[0].to_s
+                  end
+
+                  queries_config.each_pair do |query_key, query_sql|
+                    if lookup_pair[0] == query_key.to_s or lookup_pair[0] == ''
+                      queries.push Backend.parse_string(query_sql, scope, {"key" => lookup_pair[1] })
+                    end
+                  end
+                else
+                  queries = [ queries_config ].flatten
+                  queries.map! { |q| Backend.parse_string(q, scope, {"key" => key}) }
+                end
 
                 queries.each do |mysql_query|
 
