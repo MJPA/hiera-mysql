@@ -38,7 +38,7 @@ class Hiera
 
                   queries_config.each_pair do |query_key, query_sql|
                     if lookup_pair[0] == query_key.to_s or lookup_pair[0] == ''
-                      queries.push Backend.parse_string(query_sql, scope, {"key" => lookup_pair[1] })
+                      queries.push Backend.parse_string(query_sql, scope, {"key" => Mysql.escape_string(lookup_pair[1]) })
                     end
                   end
                 else
