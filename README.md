@@ -10,7 +10,7 @@ Installation
 
 or
 
-`puppet module install crayfishx/hiera_mysql`
+`puppet module install mjpa/hiera_mysql`
 
 
 Introduction
